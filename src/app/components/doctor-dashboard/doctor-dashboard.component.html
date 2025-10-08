@@ -1,0 +1,80 @@
+<div class="min-h-screen bg-gray-50 flex flex-col">
+  <!-- Navbar -->
+  <header class="bg-white shadow-md sticky top-0 z-50">
+    <div class="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
+      <h1 class="text-2xl font-semibold text-blue-600">Doctor Dashboard</h1>
+      <button
+        class="bg-red-500 text-white px-4 py-2 rounded-md hover:bg-red-600 transition"
+      >
+        Logout
+      </button>
+    </div>
+  </header>
+
+  <!-- Main Content -->
+  <div class="flex flex-1">
+    <!-- Sidebar -->
+    <aside class="w-64 bg-white shadow-lg hidden md:block">
+      <nav class="flex flex-col py-6 space-y-2">
+        <a
+          routerLink="/doctor-dashboard"
+          routerLinkActive="bg-blue-100 text-blue-700"
+          class="px-6 py-3 hover:bg-blue-50 text-gray-700 font-medium flex items-center gap-2 transition"
+        >
+          🏠 Dashboard
+        </a>
+        <a
+          routerLink="/doctor-dashboard/patients"
+          routerLinkActive="bg-blue-100 text-blue-700"
+          class="px-6 py-3 hover:bg-blue-50 text-gray-700 font-medium flex items-center gap-2 transition"
+        >
+          👩‍⚕️ My Patients
+        </a>
+        <a
+          routerLink="/doctor-dashboard/appointments"
+          routerLinkActive="bg-blue-100 text-blue-700"
+          class="px-6 py-3 hover:bg-blue-50 text-gray-700 font-medium flex items-center gap-2 transition"
+        >
+          📅 Appointments
+        </a>
+        <a
+          routerLink="/doctor-dashboard/settings"
+          routerLinkActive="bg-blue-100 text-blue-700"
+          class="px-6 py-3 hover:bg-blue-50 text-gray-700 font-medium flex items-center gap-2 transition"
+        >
+          ⚙️ Settings
+        </a>
+      </nav>
+    </aside>
+
+    <!-- Dashboard Content -->
+    <main class="flex-1 p-6">
+      <h2 class="text-xl font-semibold mb-6 text-gray-800">Overview</h2>
+
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <!-- Card 1 -->
+        <div class="bg-white p-6 rounded-lg shadow hover:shadow-lg transition">
+          <h3 class="text-lg font-semibold text-gray-700">Total Patients</h3>
+          <p class="text-3xl font-bold text-blue-600 mt-2">45</p>
+        </div>
+
+        <!-- Card 2 -->
+        <div class="bg-white p-6 rounded-lg shadow hover:shadow-lg transition">
+          <h3 class="text-lg font-semibold text-gray-700">Upcoming Appointments</h3>
+          <p class="text-3xl font-bold text-blue-600 mt-2">7</p>
+        </div>
+
+        <!-- Card 3 -->
+        <div class="bg-white p-6 rounded-lg shadow hover:shadow-lg transition">
+          <h3 class="text-lg font-semibold text-gray-700">Completed Consultations</h3>
+          <p class="text-3xl font-bold text-blue-600 mt-2">120</p>
+        </div>
+      </div>
+
+      <!-- Inner page content -->
+      <div class="mt-8">
+        <router-outlet></router-outlet>
+      </div>
+    </main>
+  </div>
+</div>

@@ -1,0 +1,80 @@
+<div class="min-h-screen bg-gray-50 flex flex-col">
+  <!-- Navbar -->
+  <header class="bg-blue-600 text-white shadow-md">
+    <div class="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
+      <h1 class="text-2xl font-semibold">Patient Dashboard</h1>
+      <button
+        class="bg-white text-blue-600 px-4 py-2 rounded-md hover:bg-gray-100 transition"
+      >
+        Logout
+      </button>
+    </div>
+  </header>
+
+  <!-- Main Content -->
+  <div class="flex flex-1">
+    <!-- Sidebar -->
+    <aside class="w-64 bg-white shadow-lg hidden md:block">
+      <nav class="flex flex-col py-6 space-y-2">
+        <a
+          routerLink="/patient-dashboard"
+          routerLinkActive="bg-blue-100 text-blue-700"
+          class="px-6 py-3 hover:bg-blue-50 text-gray-700 font-medium flex items-center gap-2 transition"
+        >
+          🏠 Dashboard
+        </a>
+        <a
+          routerLink="/patient-dashboard/appointments"
+          routerLinkActive="bg-blue-100 text-blue-700"
+          class="px-6 py-3 hover:bg-blue-50 text-gray-700 font-medium flex items-center gap-2 transition"
+        >
+          📅 My Appointments
+        </a>
+        <a
+          routerLink="/patient-dashboard/doctors"
+          routerLinkActive="bg-blue-100 text-blue-700"
+          class="px-6 py-3 hover:bg-blue-50 text-gray-700 font-medium flex items-center gap-2 transition"
+        >
+          👨‍⚕️ My Doctors
+        </a>
+        <a
+          routerLink="/patient-dashboard/profile"
+          routerLinkActive="bg-blue-100 text-blue-700"
+          class="px-6 py-3 hover:bg-blue-50 text-gray-700 font-medium flex items-center gap-2 transition"
+        >
+          👤 Profile
+        </a>
+      </nav>
+    </aside>
+
+    <!-- Dashboard Content -->
+    <main class="flex-1 p-6">
+      <h2 class="text-xl font-semibold mb-6 text-gray-800">Welcome Back!</h2>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <!-- Card 1 -->
+        <div class="bg-white p-6 rounded-lg shadow hover:shadow-lg transition">
+          <h3 class="text-lg font-semibold text-gray-700">Next Appointment</h3>
+          <p class="text-sm text-gray-500 mt-1">12 Oct, 2025 - 10:30 AM</p>
+        </div>
+
+        <!-- Card 2 -->
+        <div class="bg-white p-6 rounded-lg shadow hover:shadow-lg transition">
+          <h3 class="text-lg font-semibold text-gray-700">Assigned Doctor</h3>
+          <p class="text-sm text-gray-500 mt-1">Dr. Sarah Johnson</p>
+        </div>
+
+        <!-- Card 3 -->
+        <div class="bg-white p-6 rounded-lg shadow hover:shadow-lg transition">
+          <h3 class="text-lg font-semibold text-gray-700">Health Tips</h3>
+          <p class="text-sm text-gray-500 mt-1">Stay hydrated and rest well!</p>
+        </div>
+      </div>
+
+      <!-- Nested content -->
+      <div class="mt-8">
+        <router-outlet></router-outlet>
+      </div>
+    </main>
+  </div>
+</div>
