@@ -1,0 +1,335 @@
+<div class="space-y-6">
+  <!-- Header -->
+  <div class="bg-white p-6 rounded-lg shadow">
+    <div class="flex justify-between items-center">
+      <div>
+        <h2 class="text-2xl font-bold text-gray-800 mb-2">💰 Invoices Management</h2>
+        <p class="text-gray-600">Manage billing and payments</p>
+      </div>
+      <div class="flex gap-2">
+        <button
+          (click)="loadInvoices()"
+          class="bg-gray-600 text-white px-4 py-2 rounded-lg hover:bg-gray-700 transition"
+        >
+          🔄 Refresh
+        </button>
+        <button
+          (click)="openCreateModal()"
+          class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition"
+        >
+          + Create Invoice
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Revenue Statistics -->
+  <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+    <div class="bg-gradient-to-br from-green-500 to-green-600 text-white p-6 rounded-lg shadow-lg">
+      <p class="text-green-100 text-sm mb-1">Total Revenue</p>
+      <p class="text-3xl font-bold">${{ totalRevenue.toFixed(2) }}</p>
+    </div>
+
+    <div class="bg-gradient-to-br from-yellow-500 to-yellow-600 text-white p-6 rounded-lg shadow-lg">
+      <p class="text-yellow-100 text-sm mb-1">Pending Amount</p>
+      <p class="text-3xl font-bold">${{ pendingAmount.toFixed(2) }}</p>
+    </div>
+
+    <div class="bg-gradient-to-br from-blue-500 to-blue-600 text-white p-6 rounded-lg shadow-lg">
+      <p class="text-blue-100 text-sm mb-1">Paid Amount</p>
+      <p class="text-3xl font-bold">${{ paidAmount.toFixed(2) }}</p>
+    </div>
+
+    <div class="bg-gradient-to-br from-purple-500 to-purple-600 text-white p-6 rounded-lg shadow-lg">
+      <p class="text-purple-100 text-sm mb-1">Total Invoices</p>
+      <p class="text-3xl font-bold">{{ invoices.length }}</p>
+    </div>
+  </div>
+
+  <!-- Filters -->
+  <div class="bg-white p-6 rounded-lg shadow">
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
+      <!-- Search -->
+      <div>
+        <label class="block text-sm font-medium text-gray-700 mb-2">Search</label>
+        <input
+          type="text"
+          [(ngModel)]="searchTerm"
+          (ngModelChange)="applyFilters()"
+          placeholder="Patient, Doctor, Invoice ID..."
+          class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+        />
+      </div>
+
+      <!-- Month Filter -->
+      <div>
+        <label class="block text-sm font-medium text-gray-700 mb-2">Filter by Month</label>
+        <input
+          type="month"
+          [(ngModel)]="selectedMonth"
+          (ngModelChange)="applyFilters()"
+          class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+        />
+      </div>
+
+      <!-- Clear Filters -->
+      <div class="flex items-end">
+        <button
+          *ngIf="searchTerm || selectedStatus !== 'all' || selectedMonth"
+          (click)="clearFilters()"
+          class="w-full text-sm text-blue-600 hover:text-blue-800 font-medium"
+        >
+          Clear All Filters
+        </button>
+      </div>
+    </div>
+
+    <!-- Status Filter Tabs -->
+    <div class="flex flex-wrap gap-2">
+      <button
+        (click)="filterByStatus('all')"
+        [class]="selectedStatus === 'all' ? 'bg-blue-600 text-white' : 'bg-gray-100 text-gray-700 hover:bg-gray-200'"
+        class="px-4 py-2 rounded-lg font-medium transition"
+      >
+        All ({{ statusCounts.all }})
+      </button>
+      <button
+        (click)="filterByStatus('pending')"
+        [class]="selectedStatus === 'pending' ? 'bg-yellow-600 text-white' : 'bg-yellow-100 text-yellow-700 hover:bg-yellow-200'"
+        class="px-4 py-2 rounded-lg font-medium transition"
+      >
+        ⏳ Pending ({{ statusCounts.pending }})
+      </button>
+      <button
+        (click)="filterByStatus('paid')"
+        [class]="selectedStatus === 'paid' ? 'bg-green-600 text-white' : 'bg-green-100 text-green-700 hover:bg-green-200'"
+        class="px-4 py-2 rounded-lg font-medium transition"
+      >
+        ✅ Paid ({{ statusCounts.paid }})
+      </button>
+      <button
+        (click)="filterByStatus('cancelled')"
+        [class]="selectedStatus === 'cancelled' ? 'bg-red-600 text-white' : 'bg-red-100 text-red-700 hover:bg-red-200'"
+        class="px-4 py-2 rounded-lg font-medium transition"
+      >
+        ❌ Cancelled ({{ statusCounts.cancelled }})
+      </button>
+    </div>
+  </div>
+
+  <!-- Loading State -->
+  <div *ngIf="loading" class="bg-white p-12 rounded-lg shadow text-center">
+    <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto"></div>
+    <p class="mt-4 text-gray-600">Loading invoices...</p>
+  </div>
+
+  <!-- Invoices List -->
+  <div *ngIf="!loading && filteredInvoices.length > 0" class="space-y-4">
+    <div *ngFor="let invoice of filteredInvoices" 
+         class="bg-white rounded-lg shadow hover:shadow-lg transition-all duration-300 overflow-hidden">
+      
+      <div class="p-6">
+        <div class="flex justify-between items-start mb-4">
+          <!-- Invoice Info -->
+          <div class="flex-1">
+            <div class="flex items-center gap-2 mb-2">
+              <h3 class="text-lg font-bold text-gray-800">Invoice #{{ invoice.id }}</h3>
+              <span [class]="getStatusClass(invoice.status)" 
+                    class="px-2 py-1 rounded text-xs font-medium inline-flex items-center gap-1">
+                <span>{{ getStatusIcon(invoice.status) }}</span>
+                <span>{{ invoice.status | titlecase }}</span>
+              </span>
+            </div>
+            <p class="text-sm text-gray-600">
+              Created: {{ invoice.created_at | date: 'MMM dd, yyyy h:mm a' }}
+            </p>
+          </div>
+
+          <!-- Amount -->
+          <div class="text-right">
+            <p class="text-sm text-gray-500">Amount</p>
+            <p class="text-2xl font-bold text-green-600">${{ formatAmount(invoice.amount) }}
+</p>
+          </div>
+        </div>
+
+        <!-- Details -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4 p-4 bg-gray-50 rounded-lg">
+          <div>
+            <p class="text-xs text-gray-500">Patient</p>
+            <p class="font-medium text-gray-800">{{ invoice.patient_name }}</p>
+          </div>
+          <div>
+            <p class="text-xs text-gray-500">Doctor</p>
+            <p class="font-medium text-gray-800">Dr. {{ invoice.doctor_name }}</p>
+          </div>
+          <div>
+            <p class="text-xs text-gray-500">Appointment Date</p>
+            <p class="font-medium text-gray-800">{{ invoice.appointment_date | date: 'MMM dd, yyyy' }}</p>
+          </div>
+        </div>
+
+        <!-- Payment Info -->
+        <div *ngIf="invoice.payment_method || invoice.payment_date" class="mb-4 p-3 bg-green-50 rounded-lg">
+          <p class="text-sm text-gray-600">
+            <strong>Payment Method:</strong> {{ invoice.payment_method }}
+          </p>
+          <p class="text-sm text-gray-600" *ngIf="invoice.payment_date">
+            <strong>Paid On:</strong> {{ invoice.payment_date | date: 'MMM dd, yyyy h:mm a' }}
+          </p>
+        </div>
+
+        <!-- Notes -->
+        <div *ngIf="invoice.notes" class="mb-4 p-3 bg-blue-50 rounded-lg">
+          <p class="text-sm text-gray-600"><strong>Notes:</strong> {{ invoice.notes }}</p>
+        </div>
+
+        <!-- Actions -->
+        <div class="flex flex-wrap gap-2 pt-4 border-t border-gray-200">
+          <button
+            *ngIf="invoice.status === 'pending'"
+            (click)="markAsPaid(invoice.id)"
+            class="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition text-sm font-medium"
+          >
+            ✅ Mark as Paid
+          </button>
+
+          <button
+            *ngIf="invoice.status === 'pending'"
+            (click)="cancelInvoice(invoice.id)"
+            class="px-4 py-2 border border-red-300 text-red-600 rounded-lg hover:bg-red-50 transition text-sm font-medium"
+          >
+            ❌ Cancel
+          </button>
+
+          <button
+            (click)="printInvoice(invoice)"
+            class="px-4 py-2 border border-blue-300 text-blue-600 rounded-lg hover:bg-blue-50 transition text-sm font-medium"
+          >
+            🖨️ Print
+          </button>
+
+          <button
+            (click)="deleteInvoice(invoice.id)"
+            class="px-4 py-2 border border-gray-300 text-gray-600 rounded-lg hover:bg-gray-50 transition text-sm font-medium"
+          >
+            🗑️ Delete
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Empty State -->
+  <div *ngIf="!loading && filteredInvoices.length === 0" 
+       class="bg-white p-12 rounded-lg shadow text-center">
+    <div class="text-6xl mb-4">💰</div>
+    <h3 class="text-xl font-semibold text-gray-800 mb-2">No Invoices Found</h3>
+    <p class="text-gray-600 mb-6">
+      {{ searchTerm || selectedStatus !== 'all' || selectedMonth ? 'Try adjusting your filters' : 'No invoices created yet.' }}
+    </p>
+    <button
+      *ngIf="searchTerm || selectedStatus !== 'all' || selectedMonth"
+      (click)="clearFilters()"
+      class="bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700 transition font-medium"
+    >
+      Clear Filters
+    </button>
+  </div>
+</div>
+
+<!-- Create Invoice Modal -->
+<div *ngIf="showCreateModal" 
+     class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4"
+     (click)="closeCreateModal()">
+  
+  <div class="bg-white rounded-lg shadow-2xl max-w-2xl w-full"
+       (click)="$event.stopPropagation()">
+    
+    <!-- Modal Header -->
+    <div class="bg-gradient-to-r from-blue-500 to-blue-600 text-white p-6">
+      <div class="flex justify-between items-center">
+        <h2 class="text-2xl font-bold">Create New Invoice</h2>
+        <button
+          (click)="closeCreateModal()"
+          class="text-white hover:bg-blue-700 rounded-full p-2 transition"
+        >
+          ✕
+        </button>
+      </div>
+    </div>
+
+    <!-- Modal Content -->
+    <div class="p-6">
+      <form (ngSubmit)="createInvoice()" class="space-y-4">
+        <!-- Select Appointment -->
+        <div>
+          <label class="block text-sm font-medium text-gray-700 mb-2">
+            Select Appointment <span class="text-red-500">*</span>
+          </label>
+          <select
+            [(ngModel)]="newInvoice.appointment_id"
+            name="appointment"
+            required
+            class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+          >
+            <option value="0">Choose an appointment...</option>
+            <option *ngFor="let apt of appointments" [value]="apt.id">
+              {{ apt.patient_name }} - Dr. {{ apt.doctor_name }} ({{ apt.appointment_date | date: 'MMM dd, yyyy' }})
+            </option>
+          </select>
+          <p class="text-xs text-gray-500 mt-1">Only completed appointments without invoices are shown</p>
+        </div>
+
+        <!-- Amount -->
+        <div>
+          <label class="block text-sm font-medium text-gray-700 mb-2">
+            Amount ($) <span class="text-red-500">*</span>
+          </label>
+          <input
+            type="number"
+            [(ngModel)]="newInvoice.amount"
+            name="amount"
+            step="0.01"
+            min="0"
+            required
+            placeholder="0.00"
+            class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+          />
+        </div>
+
+        <!-- Notes -->
+        <div>
+          <label class="block text-sm font-medium text-gray-700 mb-2">Notes (Optional)</label>
+          <textarea
+            [(ngModel)]="newInvoice.notes"
+            name="notes"
+            rows="3"
+            placeholder="Additional notes..."
+            class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+          ></textarea>
+        </div>
+
+        <!-- Buttons -->
+        <div class="flex gap-4 pt-4">
+          <button
+            type="submit"
+            [disabled]="savingInvoice"
+            class="flex-1 bg-blue-600 text-white py-3 rounded-lg font-semibold hover:bg-blue-700 transition disabled:bg-gray-400"
+          >
+            <span *ngIf="!savingInvoice">Create Invoice</span>
+            <span *ngIf="savingInvoice">Creating...</span>
+          </button>
+
+          <button
+            type="button"
+            (click)="closeCreateModal()"
+            class="px-6 py-3 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition"
+          >
+            Cancel
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>

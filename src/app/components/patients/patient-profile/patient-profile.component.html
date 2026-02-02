@@ -1,0 +1,237 @@
+<div class="space-y-6">
+  <!-- Header -->
+  <div class="bg-white p-6 rounded-lg shadow">
+    <h2 class="text-2xl font-bold text-gray-800 mb-2">👤 My Profile</h2>
+    <p class="text-gray-600">View and manage your personal information</p>
+  </div>
+
+  <!-- Loading State -->
+  <div *ngIf="loading" class="bg-white p-12 rounded-lg shadow text-center">
+    <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto"></div>
+    <p class="mt-4 text-gray-600">Loading profile...</p>
+  </div>
+
+  <!-- Profile Content -->
+  <div *ngIf="!loading" class="space-y-6">
+    
+    <!-- Profile Info Card -->
+    <div class="bg-white rounded-lg shadow overflow-hidden">
+      <!-- Profile Header -->
+      <div class="bg-gradient-to-r from-blue-500 to-blue-600 p-8 text-white">
+        <div class="flex items-center gap-6">
+          <div class="w-24 h-24 rounded-full bg-white flex items-center justify-center text-blue-600 text-4xl font-bold">
+            {{ profileData.name.charAt(0).toUpperCase() }}
+          </div>
+          <div>
+            <h3 class="text-2xl font-bold">{{ profileData.name }}</h3>
+            <p class="text-blue-100">{{ profileData.email }}</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Profile Details -->
+      <div class="p-8">
+        <div class="flex justify-between items-center mb-6">
+          <h4 class="text-lg font-semibold text-gray-800">Personal Information</h4>
+          <button
+            *ngIf="!isEditing"
+            (click)="enableEdit()"
+            class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition font-medium"
+          >
+            ✏️ Edit Profile
+          </button>
+        </div>
+
+        <form *ngIf="isEditing" (ngSubmit)="saveProfile()" class="space-y-4">
+          <!-- Name -->
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-2">
+              Full Name <span class="text-red-500">*</span>
+            </label>
+            <input
+              type="text"
+              [(ngModel)]="profileData.name"
+              name="name"
+              required
+              class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+            />
+          </div>
+
+          <!-- Email & Phone -->
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-2">
+                Email <span class="text-red-500">*</span>
+              </label>
+              <input
+                type="email"
+                [(ngModel)]="profileData.email"
+                name="email"
+                required
+                class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              />
+            </div>
+
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-2">
+                Phone <span class="text-red-500">*</span>
+              </label>
+              <input
+                type="tel"
+                [(ngModel)]="profileData.phone"
+                name="phone"
+                required
+                class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              />
+            </div>
+          </div>
+
+          <!-- Date of Birth & Gender -->
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-2">Date of Birth</label>
+              <input
+                type="date"
+                [(ngModel)]="profileData.date_of_birth"
+                name="date_of_birth"
+                class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              />
+            </div>
+
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-2">Gender</label>
+              <select
+                [(ngModel)]="profileData.gender"
+                name="gender"
+                class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              >
+                <option value="">Select Gender</option>
+                <option value="male">Male</option>
+                <option value="female">Female</option>
+                <option value="other">Other</option>
+              </select>
+            </div>
+          </div>
+
+          <!-- Address -->
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-2">Address</label>
+            <textarea
+              [(ngModel)]="profileData.address"
+              name="address"
+              rows="3"
+              class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+            ></textarea>
+          </div>
+
+          <!-- Action Buttons -->
+          <div class="flex gap-4 pt-4">
+            <button
+              type="submit"
+              [disabled]="saving"
+              class="flex-1 bg-blue-600 text-white py-3 rounded-lg font-semibold hover:bg-blue-700 transition disabled:bg-gray-400"
+            >
+              <span *ngIf="!saving">💾 Save Changes</span>
+              <span *ngIf="saving">Saving...</span>
+            </button>
+
+            <button
+              type="button"
+              (click)="cancelEdit()"
+              class="px-6 py-3 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition"
+            >
+              Cancel
+            </button>
+          </div>
+        </form>
+
+        <!-- View Mode -->
+        <div *ngIf="!isEditing" class="space-y-4">
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div>
+              <label class="text-sm text-gray-500">Full Name</label>
+              <p class="text-gray-800 font-medium">{{ profileData.name }}</p>
+            </div>
+
+            <div>
+              <label class="text-sm text-gray-500">Email</label>
+              <p class="text-gray-800 font-medium">{{ profileData.email }}</p>
+            </div>
+
+            <div>
+              <label class="text-sm text-gray-500">Phone</label>
+              <p class="text-gray-800 font-medium">{{ profileData.phone || 'Not provided' }}</p>
+            </div>
+
+            <div>
+              <label class="text-sm text-gray-500">Date of Birth</label>
+              <p class="text-gray-800 font-medium">
+                {{ profileData.date_of_birth ? (profileData.date_of_birth | date: 'MMM dd, yyyy') : 'Not provided' }}
+              </p>
+            </div>
+
+            <div>
+              <label class="text-sm text-gray-500">Gender</label>
+              <p class="text-gray-800 font-medium">{{ profileData.gender ? (profileData.gender | titlecase) : 'Not provided' }}</p>
+            </div>
+
+            <div class="md:col-span-2">
+              <label class="text-sm text-gray-500">Address</label>
+              <p class="text-gray-800 font-medium">{{ profileData.address || 'Not provided' }}</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Account Settings -->
+    <div class="bg-white p-6 rounded-lg shadow">
+      <h4 class="text-lg font-semibold text-gray-800 mb-4">Account Settings</h4>
+      
+      <div class="space-y-4">
+        <!-- Change Password -->
+        <div class="p-4 border border-gray-200 rounded-lg">
+          <h5 class="font-medium text-gray-800 mb-2">🔒 Change Password</h5>
+          <p class="text-sm text-gray-600 mb-3">Update your password to keep your account secure</p>
+          <button class="text-blue-600 hover:text-blue-800 font-medium text-sm">
+            Change Password →
+          </button>
+        </div>
+
+        <!-- Logout -->
+        <div class="p-4 border border-gray-200 rounded-lg">
+          <h5 class="font-medium text-gray-800 mb-2">🚪 Logout</h5>
+          <p class="text-sm text-gray-600 mb-3">Sign out from your account</p>
+          <button
+            (click)="logout()"
+            class="text-blue-600 hover:text-blue-800 font-medium text-sm"
+          >
+            Logout →
+          </button>
+        </div>
+
+        <!-- Delete Account -->
+        <div class="p-4 border border-red-200 bg-red-50 rounded-lg">
+          <h5 class="font-medium text-red-800 mb-2">⚠️ Delete Account</h5>
+          <p class="text-sm text-red-600 mb-3">Permanently delete your account and all data. This action cannot be undone.</p>
+          <button
+            (click)="deleteAccount()"
+            class="text-red-600 hover:text-red-800 font-medium text-sm"
+          >
+            Delete Account →
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Account Info -->
+    <div class="bg-blue-50 border border-blue-200 p-4 rounded-lg">
+      <h5 class="font-medium text-blue-800 mb-2">ℹ️ Account Information</h5>
+      <ul class="text-sm text-blue-700 space-y-1">
+        <li>• Account ID: #{{ profileData.id }}</li>
+        <li>• Your data is encrypted and secure</li>
+        <li>• We never share your personal information</li>
+      </ul>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,188 @@
+<div class="min-h-screen bg-gray-50 flex flex-col">
+  <!-- Navbar -->
+  <header class="bg-white shadow-md sticky top-0 z-50">
+    <div class="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
+      <div>
+        <h1 class="text-2xl font-semibold text-blue-600">Doctor Dashboard</h1>
+        <p class="text-sm text-gray-600">{{ doctorName }} - {{ doctorSpecialization }}</p>
+      </div>
+      <button
+        (click)="logout()"
+        class="bg-red-500 text-white px-4 py-2 rounded-md hover:bg-red-600 transition"
+      >
+        Logout
+      </button>
+    </div>
+  </header>
+
+  <!-- Main Content -->
+  <div class="flex flex-1">
+    <!-- Sidebar -->
+    <aside class="w-64 bg-white shadow-lg hidden md:block">
+      <nav class="flex flex-col py-6 space-y-2">
+        <a  
+          routerLink="/doctor-dashboard"
+          [routerLinkActiveOptions]="{exact: true}"
+          routerLinkActive="bg-blue-100 text-blue-700"
+          class="px-6 py-3 hover:bg-blue-50 text-gray-700 font-medium flex items-center gap-2 transition"
+        >
+          🏠 Dashboard
+        </a>
+
+        <a
+          routerLink="/doctor-dashboard/appointments"
+          routerLinkActive="bg-blue-100 text-blue-700"
+          class="px-6 py-3 hover:bg-blue-50 text-gray-700 font-medium flex items-center gap-2 transition"
+        >
+          📅 Appointments
+        </a>
+        
+        <a
+          routerLink="/doctor-dashboard/patients"
+          routerLinkActive="bg-blue-100 text-blue-700"
+          class="px-6 py-3 hover:bg-blue-50 text-gray-700 font-medium flex items-center gap-2 transition"
+        >
+          👥 My Patients
+        </a>
+        
+        <a
+          routerLink="/doctor-dashboard/schedule"
+          routerLinkActive="bg-blue-100 text-blue-700"
+          class="px-6 py-3 hover:bg-blue-50 text-gray-700 font-medium flex items-center gap-2 transition"
+        >
+          🕐 Schedule
+        </a>
+        
+        <a
+          routerLink="/doctor-dashboard/profile"
+          routerLinkActive="bg-blue-100 text-blue-700"
+          class="px-6 py-3 hover:bg-blue-50 text-gray-700 font-medium flex items-center gap-2 transition"
+        >
+          ⚙️ Profile
+        </a>
+      </nav>
+    </aside>
+
+    <!-- Dashboard Content -->
+    <main class="flex-1 p-6">
+      
+      <!-- Loading State -->
+      <div *ngIf="loading" class="text-center py-12">
+        <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto"></div>
+        <p class="mt-4 text-gray-600">Loading dashboard...</p>
+      </div>
+
+      <!-- Dashboard Overview (Only on main route) -->
+      <div *ngIf="!loading && router.url === '/doctor-dashboard'">
+        <h2 class="text-2xl font-semibold mb-6 text-gray-800">Welcome Back, Dr. {{ doctorName }}! 👋</h2>
+
+        <!-- Statistics Cards -->
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+          <!-- Total Patients -->
+          <div class="bg-gradient-to-br from-blue-500 to-blue-600 text-white p-6 rounded-lg shadow-lg hover:shadow-xl transition">
+            <div class="flex justify-between items-start mb-4">
+              <div>
+                <p class="text-blue-100 text-sm">Total Patients</p>
+                <p class="text-4xl font-bold mt-2">{{ totalPatients }}</p>
+              </div>
+              <span class="text-5xl opacity-20">👥</span>
+            </div>
+            <a routerLink="/doctor-dashboard/patients" class="text-sm text-blue-100 hover:text-white">
+              View all →
+            </a>
+          </div>
+
+          <!-- Upcoming Appointments -->
+          <div class="bg-gradient-to-br from-green-500 to-green-600 text-white p-6 rounded-lg shadow-lg hover:shadow-xl transition">
+            <div class="flex justify-between items-start mb-4">
+              <div>
+                <p class="text-green-100 text-sm">Upcoming</p>
+                <p class="text-4xl font-bold mt-2">{{ upcomingAppointments }}</p>
+              </div>
+              <span class="text-5xl opacity-20">📅</span>
+            </div>
+            <a routerLink="/doctor-dashboard/appointments" class="text-sm text-green-100 hover:text-white">
+              View schedule →
+            </a>
+          </div>
+
+          <!-- Pending Appointments -->
+          <div class="bg-gradient-to-br from-yellow-500 to-yellow-600 text-white p-6 rounded-lg shadow-lg hover:shadow-xl transition">
+            <div class="flex justify-between items-start mb-4">
+              <div>
+                <p class="text-yellow-100 text-sm">Pending</p>
+                <p class="text-4xl font-bold mt-2">{{ pendingAppointments }}</p>
+              </div>
+              <span class="text-5xl opacity-20">⏳</span>
+            </div>
+            <a routerLink="/doctor-dashboard/appointments" class="text-sm text-yellow-100 hover:text-white">
+              Review →
+            </a>
+          </div>
+
+          <!-- Completed Consultations -->
+          <div class="bg-gradient-to-br from-purple-500 to-purple-600 text-white p-6 rounded-lg shadow-lg hover:shadow-xl transition">
+            <div class="flex justify-between items-start mb-4">
+              <div>
+                <p class="text-purple-100 text-sm">Completed</p>
+                <p class="text-4xl font-bold mt-2">{{ completedConsultations }}</p>
+              </div>
+              <span class="text-5xl opacity-20">✅</span>
+            </div>
+            <p class="text-sm text-purple-100">All time</p>
+          </div>
+        </div>
+
+        <!-- Quick Actions -->
+        <div class="bg-white p-6 rounded-lg shadow mb-8">
+          <h3 class="text-lg font-semibold text-gray-800 mb-4">Quick Actions</h3>
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <a routerLink="/doctor-dashboard/appointments"
+               class="flex items-center gap-3 p-4 border border-gray-200 rounded-lg hover:border-blue-500 hover:bg-blue-50 transition">
+              <span class="text-3xl">📋</span>
+              <div>
+                <p class="font-medium text-gray-700">View Appointments</p>
+                <p class="text-xs text-gray-500">Manage your schedule</p>
+              </div>
+            </a>
+            
+            <a routerLink="/doctor-dashboard/patients"
+               class="flex items-center gap-3 p-4 border border-gray-200 rounded-lg hover:border-blue-500 hover:bg-blue-50 transition">
+              <span class="text-3xl">👥</span>
+              <div>
+                <p class="font-medium text-gray-700">My Patients</p>
+                <p class="text-xs text-gray-500">View patient list</p>
+              </div>
+            </a>
+            
+            <a routerLink="/doctor-dashboard/schedule"
+               class="flex items-center gap-3 p-4 border border-gray-200 rounded-lg hover:border-blue-500 hover:bg-blue-50 transition">
+              <span class="text-3xl">🕐</span>
+              <div>
+                <p class="font-medium text-gray-700">Set Schedule</p>
+                <p class="text-xs text-gray-500">Manage availability</p>
+              </div>
+            </a>
+          </div>
+        </div>
+
+        <!-- Today's Schedule Preview -->
+        <div class="bg-white p-6 rounded-lg shadow">
+          <h3 class="text-lg font-semibold text-gray-800 mb-4">Today's Schedule</h3>
+          <p class="text-gray-600 text-sm">
+            You have <strong class="text-blue-600">{{ upcomingAppointments }}</strong> appointments scheduled for today.
+          </p>
+          <a routerLink="/doctor-dashboard/appointments" 
+             class="inline-block mt-4 text-blue-600 hover:text-blue-800 font-medium text-sm">
+            View full schedule →
+          </a>
+        </div>
+      </div>
+
+      <!-- Child Routes Content -->
+      <div>
+        <router-outlet></router-outlet>
+      </div>
+    </main>
+  </div>
+</div>

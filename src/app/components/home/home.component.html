@@ -21,11 +21,15 @@
                 </div>
                 
                 <div class="hidden md:flex items-center space-x-4">
-                    <a routerLink="/admin-login"class="px-4 py-2 text-blue-600 hover:text-blue-700 transition-colors">Login</a>
+                    <a routerLink="/login"class="px-4 py-2 text-blue-600 hover:text-blue-700 transition-colors">Login</a>
                     <a routerLink="/admin-register" class="px-6 py-2 bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-lg hover:shadow-lg transform hover:scale-105 transition-all duration-300">
                         Sign Up
                     </a>
+                    <a routerLink="/patient-register" class="px-6 py-2 bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-lg hover:shadow-lg transform hover:scale-105 transition-all duration-300">
+                        Sign Up as patient
+                    </a>
                 </div>
+                
                 
                 <!-- Mobile Menu Button - Fixed with Angular event binding -->
                 <button class="md:hidden" (click)="toggleMobileMenu()" type="button">

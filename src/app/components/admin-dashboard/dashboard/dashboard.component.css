@@ -1,0 +1,13 @@
+/* Highlight active sidebar link */
+a[routerLinkActive] {
+  font-weight: 600;
+}
+
+/* Scrollbar styling */
+main::-webkit-scrollbar {
+  width: 6px;
+}
+main::-webkit-scrollbar-thumb {
+  background: #93c5fd;
+  border-radius: 8px;
+}
