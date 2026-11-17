@@ -57,7 +57,6 @@ export class InvoicesComponent implements OnInit {
 
     this.api.getAllInvoices()
       .then((res: any) => {
-        console.log('Invoices Response:', res.data);
         
         if (res.data.status) {
           this.invoices = res.data.data || [];
@@ -172,7 +171,6 @@ export class InvoicesComponent implements OnInit {
 
     this.api.createInvoice(this.newInvoice)
       .then((res: any) => {
-        console.log('Create Response:', res.data);
         
         if (res.data.status) {
           this.toastr.success('Invoice created successfully!');

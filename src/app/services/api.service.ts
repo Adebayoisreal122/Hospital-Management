@@ -1,18 +1,17 @@
 import { Injectable } from '@angular/core';
 import axios from 'axios';
+import { environment } from '../../environments/environment';
 @Injectable({
   providedIn: 'root'
 })
 export class ApiService {
 
-  private baseUrl = 'http://localhost/Hospital-management';
+  private baseUrl = environment.apiUrl;
   constructor() { }
 
    registerAdmin(data: any) {
-    console.log('Registering admin with data:', data);
-    console.log('Sending request to:', `${this.baseUrl}/admin_register.php`);
     
-    return axios.post(`${this.baseUrl}/admin_register.php`, data, {
+    return axios.post(`${this.baseUrl}/auth/admin_register.php`, data, {
       headers: {
         'Content-Type': 'application/json'
       }
@@ -21,7 +20,7 @@ export class ApiService {
 
   
 loginAdmin(data: any) {
-  return axios.post(`${this.baseUrl}/admin_login.php`, { 
+  return axios.post(`${this.baseUrl}/auth/login.php`, { 
     email: data.email,
     password: data.password,
     role: 'admin'  // ✅ Explicitly include role
@@ -37,7 +36,7 @@ loginAdmin(data: any) {
 getAdminDashboardStats() {
   const token = localStorage.getItem('authToken');
   
-  return axios.get(`${this.baseUrl}/get_admin_dashboard_stats.php`, {
+  return axios.get(`${this.baseUrl}/admin/get_admin_dashboard_stats.php`, {
     withCredentials: true,
     headers: {
       'Content-Type': 'application/json',
@@ -50,7 +49,7 @@ getAdminDashboardStats() {
 getDoctorStats(doctorId: number) {
   const token = localStorage.getItem('authToken');
   
-  return axios.get(`${this.baseUrl}/get_doctor_stats.php?doctor_id=${doctorId}`, {
+  return axios.get(`${this.baseUrl}/admin/get_doctor_stats.php?doctor_id=${doctorId}`, {
     withCredentials: true,
     headers: {
       'Content-Type': 'application/json',
@@ -63,7 +62,7 @@ getDoctorStats(doctorId: number) {
 deleteDoctor(doctorId: number) {
   const token = localStorage.getItem('authToken');
   
-  return axios.post(`${this.baseUrl}/delete_doctor.php`, 
+  return axios.post(`${this.baseUrl}/admin/delete_doctor.php`, 
     { doctor_id: doctorId },
     {
       withCredentials: true,
@@ -80,7 +79,7 @@ deleteDoctor(doctorId: number) {
 getAllPatients() {
   const token = localStorage.getItem('authToken');
   
-  return axios.get(`${this.baseUrl}/get_all_patients.php`, {
+  return axios.get(`${this.baseUrl}/admin/get_all_patients.php`, {
     withCredentials: true,
     headers: {
       'Content-Type': 'application/json',
@@ -93,7 +92,7 @@ getAllPatients() {
 getPatientHistory(patientId: number) {
   const token = localStorage.getItem('authToken');
   
-  return axios.get(`${this.baseUrl}/get_patient_history.php?patient_id=${patientId}`, {
+  return axios.get(`${this.baseUrl}/admin/get_patient_history.php?patient_id=${patientId}`, {
     withCredentials: true,
     headers: {
       'Content-Type': 'application/json',
@@ -105,7 +104,7 @@ getPatientHistory(patientId: number) {
 getAllAppointments() {
   const token = localStorage.getItem('authToken');
   
-  return axios.get(`${this.baseUrl}/get_all_appointments.php`, {
+  return axios.get(`${this.baseUrl}/admin/get_all_appointments.php`, {
     withCredentials: true,
     headers: {
       'Content-Type': 'application/json',
@@ -118,7 +117,7 @@ getAllAppointments() {
 adminUpdateAppointmentStatus(appointmentId: number, status: string, notes?: string) {
   const token = localStorage.getItem('authToken');
   
-  return axios.post(`${this.baseUrl}/admin_update_appointment_status.php`, 
+  return axios.post(`${this.baseUrl}/admin/admin_update_appointment_status.php`, 
     { 
       appointment_id: appointmentId, 
       status: status,
@@ -138,7 +137,7 @@ adminUpdateAppointmentStatus(appointmentId: number, status: string, notes?: stri
 deleteAppointment(appointmentId: number) {
   const token = localStorage.getItem('authToken');
   
-  return axios.post(`${this.baseUrl}/delete_appointment.php`, 
+  return axios.post(`${this.baseUrl}/admin/delete_appointment.php`, 
     { appointment_id: appointmentId },
     {
       withCredentials: true,
@@ -154,7 +153,7 @@ deleteAppointment(appointmentId: number) {
 deletePatient(patientId: number) {
   const token = localStorage.getItem('authToken');
   
-  return axios.post(`${this.baseUrl}/delete_patient.php`, 
+  return axios.post(`${this.baseUrl}/admin/delete_patient.php`, 
     { patient_id: patientId },
     {
       withCredentials: true,
@@ -174,7 +173,7 @@ deletePatient(patientId: number) {
 getAllInvoices() {
   const token = localStorage.getItem('authToken');
   
-  return axios.get(`${this.baseUrl}/get_all_invoices.php`, {
+  return axios.get(`${this.baseUrl}/admin/get_all_invoices.php`, {
     withCredentials: true,
     headers: {
       'Content-Type': 'application/json',
@@ -191,7 +190,7 @@ getAllInvoices() {
 getCompletedAppointmentsWithoutInvoice() {
   const token = localStorage.getItem('authToken');
   
-  return axios.get(`${this.baseUrl}/get_completed_appointments_without_invoice.php`, {
+  return axios.get(`${this.baseUrl}/admin/get_completed_appointments_without_invoice.php`, {
     withCredentials: true,
     headers: {
       'Content-Type': 'application/json',
@@ -207,7 +206,7 @@ getCompletedAppointmentsWithoutInvoice() {
 createInvoice(data: { appointment_id: number; amount: number; notes?: string }) {
   const token = localStorage.getItem('authToken');
   
-  return axios.post(`${this.baseUrl}/create_invoice.php`, data, {
+  return axios.post(`${this.baseUrl}/admin/create_invoice.php`, data, {
     withCredentials: true,
     headers: {
       'Content-Type': 'application/json',
@@ -223,7 +222,7 @@ createInvoice(data: { appointment_id: number; amount: number; notes?: string }) 
 markInvoiceAsPaid(invoiceId: number, paymentMethod: string) {
   const token = localStorage.getItem('authToken');
   
-  return axios.post(`${this.baseUrl}/mark_invoice_paid.php`, 
+  return axios.post(`${this.baseUrl}/admin/mark_invoice_paid.php`, 
     { 
       invoice_id: invoiceId, 
       payment_method: paymentMethod 
@@ -245,7 +244,7 @@ markInvoiceAsPaid(invoiceId: number, paymentMethod: string) {
 cancelInvoice(invoiceId: number) {
   const token = localStorage.getItem('authToken');
   
-  return axios.post(`${this.baseUrl}/cancel_invoice.php`, 
+  return axios.post(`${this.baseUrl}/admin/cancel_invoice.php`, 
     { invoice_id: invoiceId },
     {
       withCredentials: true,
@@ -264,7 +263,7 @@ cancelInvoice(invoiceId: number) {
 deleteInvoice(invoiceId: number) {
   const token = localStorage.getItem('authToken');
   
-  return axios.post(`${this.baseUrl}/delete_invoice.php`, 
+  return axios.post(`${this.baseUrl}/admin/delete_invoice.php`, 
     { invoice_id: invoiceId },
     {
       withCredentials: true,
@@ -277,7 +276,7 @@ deleteInvoice(invoiceId: number) {
 }
 
 loginDoctor(data: any) {
-  return axios.post(`${this.baseUrl}/admin_login.php`, { 
+  return axios.post(`${this.baseUrl}/auth/login.php`, { 
     email: data.email,
     password: data.password,
     role: 'doctor'  // ✅ Explicitly include role
@@ -291,14 +290,14 @@ loginDoctor(data: any) {
 
 validateInvitationToken(token: string) {
   return axios.get(
-    `${this.baseUrl}/admin.php?action=accept-invite&token=${token}`,
+    `${this.baseUrl}/auth/invitations.php?action=accept-invite&token=${token}`,
     { withCredentials: true }
   );
 }
 
 completeInvitation(data: any) {
   return axios.post(
-    `${this.baseUrl}/admin.php?action=complete-invite`,
+    `${this.baseUrl}/auth/invitations.php?action=complete-invite`,
     data,
     {
       withCredentials: true,
@@ -310,7 +309,7 @@ completeInvitation(data: any) {
 }
 
 registerPatient(data: any) {
-  return axios.post(`${this.baseUrl}/patient_register.php`, data, {
+  return axios.post(`${this.baseUrl}/auth/patient_register.php`, data, {
     headers: {
       'Content-Type': 'application/json'
     }
@@ -318,7 +317,7 @@ registerPatient(data: any) {
 }
 
 loginPatient(data: any) {
-  return axios.post(`${this.baseUrl}/admin_login.php`, { 
+  return axios.post(`${this.baseUrl}/auth/login.php`, { 
     email: data.email,
     password: data.password,
     role: 'patient'  // ✅ Explicitly include role
@@ -333,7 +332,7 @@ loginPatient(data: any) {
 getPatientDashboard() {
   const token = localStorage.getItem('authToken');
   
-  return axios.get(`${this.baseUrl}/patient_dashboard.php`, {
+  return axios.get(`${this.baseUrl}/patient/patient_dashboard.php`, {
     withCredentials: true,
     headers: {
       'Content-Type': 'application/json',
@@ -346,13 +345,12 @@ getPatientDashboard() {
 bookAppointment(data: any) {
   const token = localStorage.getItem('authToken');
   
-  console.log('Booking with token:', token); // Debug log
   
   if (!token) {
     return Promise.reject(new Error('No authentication token found'));
   }
   
-  return axios.post(`${this.baseUrl}/book_appointment.php`, data, {
+  return axios.post(`${this.baseUrl}/patient/book_appointment.php`, data, {
     withCredentials: true,
     headers: {
       'Content-Type': 'application/json',
@@ -366,7 +364,7 @@ bookAppointment(data: any) {
 getPatientAppointments() {
   const token = localStorage.getItem('authToken');
   
-  return axios.get(`${this.baseUrl}/get_patient_appointments.php`, {
+  return axios.get(`${this.baseUrl}/patient/get_patient_appointments.php`, {
     withCredentials: true,
     headers: {
       'Content-Type': 'application/json',
@@ -379,7 +377,7 @@ getPatientAppointments() {
 cancelAppointment(appointmentId: number) {
   const token = localStorage.getItem('authToken');
   
-  return axios.post(`${this.baseUrl}/cancel_appointment.php`, 
+  return axios.post(`${this.baseUrl}/patient/cancel_appointment.php`, 
     { appointment_id: appointmentId },
     {
       withCredentials: true,
@@ -396,7 +394,7 @@ cancelAppointment(appointmentId: number) {
 getPatientProfile() {
   const token = localStorage.getItem('authToken');
   
-  return axios.get(`${this.baseUrl}/get_patient_profile.php`, {
+  return axios.get(`${this.baseUrl}/patient/get_patient_profile.php`, {
     withCredentials: true,
     headers: {
       'Content-Type': 'application/json',
@@ -409,7 +407,7 @@ getPatientProfile() {
 updatePatientProfile(data: any) {
   const token = localStorage.getItem('authToken');
   
-  return axios.post(`${this.baseUrl}/update_patient_profile.php`, data, {
+  return axios.post(`${this.baseUrl}/patient/update_patient_profile.php`, data, {
     withCredentials: true,
     headers: {
       'Content-Type': 'application/json',
@@ -422,7 +420,7 @@ updatePatientProfile(data: any) {
 deletePatientAccount() {
   const token = localStorage.getItem('authToken');
   
-  return axios.post(`${this.baseUrl}/delete_patient_account.php`, {}, {
+  return axios.post(`${this.baseUrl}/patient/delete_patient_account.php`, {}, {
     withCredentials: true,
     headers: {
       'Content-Type': 'application/json',
@@ -432,13 +430,10 @@ deletePatientAccount() {
 }
 
 
-  logoutAdmin() {
-    return axios.get(`${this.baseUrl}/admin.php?action=logout`, { withCredentials: true });
-  }
 
   // Doctor
   getDoctors() {
-    return axios.get(`${this.baseUrl}/get_doctors.php`, { withCredentials: true });
+    return axios.get(`${this.baseUrl}/shared/get_doctors.php`, { withCredentials: true });
   }
 
 
@@ -446,7 +441,7 @@ deletePatientAccount() {
 getDoctorDashboard() {
   const token = localStorage.getItem('authToken');
   
-  return axios.get(`${this.baseUrl}/get_doctor_dashboard.php`, {
+  return axios.get(`${this.baseUrl}/doctor/get_doctor_dashboard.php`, {
     withCredentials: true,
     headers: {
       'Content-Type': 'application/json',
@@ -459,7 +454,7 @@ getDoctorDashboard() {
 getDoctorAppointments() {
   const token = localStorage.getItem('authToken');
   
-  return axios.get(`${this.baseUrl}/get_doctor_appointments.php`, {
+  return axios.get(`${this.baseUrl}/doctor/get_doctor_appointments.php`, {
     withCredentials: true,
     headers: {
       'Content-Type': 'application/json',
@@ -472,7 +467,7 @@ getDoctorAppointments() {
 updateAppointmentStatus(appointmentId: number, status: string, notes?: string) {
   const token = localStorage.getItem('authToken');
   
-  return axios.post(`${this.baseUrl}/update_appointment_status.php`, 
+  return axios.post(`${this.baseUrl}/doctor/update_appointment_status.php`, 
     { 
       appointment_id: appointmentId, 
       status: status,
@@ -492,7 +487,7 @@ updateAppointmentStatus(appointmentId: number, status: string, notes?: string) {
 getDoctorPatients() {
   const token = localStorage.getItem('authToken');
   
-  return axios.get(`${this.baseUrl}/get_doctor_patients.php`, {
+  return axios.get(`${this.baseUrl}/doctor/get_doctor_patients.php`, {
     withCredentials: true,
     headers: {
       'Content-Type': 'application/json',
@@ -505,7 +500,7 @@ getDoctorPatients() {
 getPatientAppointmentHistory(patientId: number) {
   const token = localStorage.getItem('authToken');
   
-  return axios.get(`${this.baseUrl}/get_patient_appointment_history.php?patient_id=${patientId}`, {
+  return axios.get(`${this.baseUrl}/doctor/get_patient_appointment_history.php?patient_id=${patientId}`, {
     withCredentials: true,
     headers: {
       'Content-Type': 'application/json',
@@ -518,7 +513,7 @@ getPatientAppointmentHistory(patientId: number) {
 getDoctorSchedule() {
   const token = localStorage.getItem('authToken');
   
-  return axios.get(`${this.baseUrl}/get_doctor_schedule.php`, {
+  return axios.get(`${this.baseUrl}/doctor/get_doctor_schedule.php`, {
     withCredentials: true,
     headers: {
       'Content-Type': 'application/json',
@@ -531,7 +526,7 @@ getDoctorSchedule() {
 addDoctorSchedule(data: any) {
   const token = localStorage.getItem('authToken');
   
-  return axios.post(`${this.baseUrl}/add_doctor_schedule.php`, data, {
+  return axios.post(`${this.baseUrl}/doctor/add_doctor_schedule.php`, data, {
     withCredentials: true,
     headers: {
       'Content-Type': 'application/json',
@@ -544,7 +539,7 @@ addDoctorSchedule(data: any) {
 updateDoctorSchedule(scheduleId: number, data: any) {
   const token = localStorage.getItem('authToken');
   
-  return axios.post(`${this.baseUrl}/update_doctor_schedule.php`, 
+  return axios.post(`${this.baseUrl}/doctor/update_doctor_schedule.php`, 
     { schedule_id: scheduleId, ...data },
     {
       withCredentials: true,
@@ -560,7 +555,7 @@ updateDoctorSchedule(scheduleId: number, data: any) {
 deleteDoctorSchedule(scheduleId: number) {
   const token = localStorage.getItem('authToken');
   
-  return axios.post(`${this.baseUrl}/delete_doctor_schedule.php`, 
+  return axios.post(`${this.baseUrl}/doctor/delete_doctor_schedule.php`, 
     { schedule_id: scheduleId },
     {
       withCredentials: true,
@@ -576,7 +571,7 @@ deleteDoctorSchedule(scheduleId: number) {
 getDoctorProfile() {
   const token = localStorage.getItem('authToken');
   
-  return axios.get(`${this.baseUrl}/get_doctor_profile.php`, {
+  return axios.get(`${this.baseUrl}/doctor/get_doctor_profile.php`, {
     withCredentials: true,
     headers: {
       'Content-Type': 'application/json',
@@ -589,7 +584,7 @@ getDoctorProfile() {
 updateDoctorProfile(data: any) {
   const token = localStorage.getItem('authToken');
   
-  return axios.post(`${this.baseUrl}/update_doctor_profile.php`, data, {
+  return axios.post(`${this.baseUrl}/doctor/update_doctor_profile.php`, data, {
     withCredentials: true,
     headers: {
       'Content-Type': 'application/json',
@@ -602,7 +597,7 @@ updateDoctorProfile(data: any) {
 deleteDoctorAccount() {
   const token = localStorage.getItem('authToken');
   
-  return axios.post(`${this.baseUrl}/delete_doctor_account.php`, {}, {
+  return axios.post(`${this.baseUrl}/doctor/delete_doctor_account.php`, {}, {
     withCredentials: true,
     headers: {
       'Content-Type': 'application/json',
@@ -611,27 +606,15 @@ deleteDoctorAccount() {
   });
 }
 
-  // Patient
-  getPatients() {
-    return axios.get(`${this.baseUrl}/patient.php`, { withCredentials: true });
-  }
 
-  // Appointment
-  getAppointments() {
-    return axios.get(`${this.baseUrl}/appointment.php`, { withCredentials: true });
-  }
 
-  // Invoice
-  getInvoices() {
-    return axios.get(`${this.baseUrl}/invoice.php`, { withCredentials: true });
-  }
   
   
 inviteDoctor(data: { email: string }) {
   const token = localStorage.getItem('authToken'); // Get the stored auth token
   
   return axios.post(
-    `${this.baseUrl}/admin.php?action=invite-doctor`,
+    `${this.baseUrl}/auth/invitations.php?action=invite-doctor`,
     data,
     {
       withCredentials: true,

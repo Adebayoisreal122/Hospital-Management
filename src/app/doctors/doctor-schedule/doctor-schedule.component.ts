@@ -49,7 +49,6 @@ export class DoctorScheduleComponent implements OnInit {
 
     this.api.getDoctorSchedule()
       .then((res: any) => {
-        console.log('Schedule Response:', res.data);
         
         if (res.data.status) {
           this.schedules = res.data.data || [];
@@ -106,7 +105,6 @@ export class DoctorScheduleComponent implements OnInit {
 
     this.api.addDoctorSchedule(this.newSchedule)
       .then((res: any) => {
-        console.log('Add Response:', res.data);
         
         if (res.data.status) {
           this.toastr.success('Schedule added successfully!');
@@ -134,7 +132,6 @@ export class DoctorScheduleComponent implements OnInit {
       is_available: schedule.is_available
     })
       .then((res: any) => {
-        console.log('Update Response:', res.data);
         
         if (res.data.status) {
           this.toastr.success('Schedule updated successfully!');
@@ -159,7 +156,6 @@ export class DoctorScheduleComponent implements OnInit {
 
     this.api.deleteDoctorSchedule(scheduleId)
       .then((res: any) => {
-        console.log('Delete Response:', res.data);
         
         if (res.data.status) {
           this.toastr.success('Schedule deleted successfully!');

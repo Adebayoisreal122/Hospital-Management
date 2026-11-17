@@ -17,14 +17,12 @@ export class DashboardComponent implements OnInit {
   adminEmail: string = '';
   adminRole: string = '';
 
-  // Dashboard statistics
   totalDoctors: number = 0;
   totalPatients: number = 0;
   totalAppointments: number = 0;
   pendingAppointments: number = 0;
   loading: boolean = true;
 
-  // Recent data
   recentAppointments: any[] = [];
 
   constructor(
@@ -54,7 +52,6 @@ export class DashboardComponent implements OnInit {
 
     this.api.getAdminDashboardStats()
       .then((res: any) => {
-        console.log('Admin Dashboard Stats:', res.data);
         
         if (res.data.status) {
           const data = res.data.data;
@@ -76,6 +73,8 @@ export class DashboardComponent implements OnInit {
 
   logout(): void {
     localStorage.removeItem('admin');
+    localStorage.removeItem('authToken');
+    localStorage.removeItem('authRole');
     sessionStorage.clear();
     this.toastr.success('Log out successful');
     setTimeout(() => {

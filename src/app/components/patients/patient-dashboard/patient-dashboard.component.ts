@@ -51,7 +51,6 @@ export class PatientDashboardComponent implements OnInit {
 
     this.api.getPatientDashboard()
       .then((res: any) => {
-        console.log('Dashboard Data:', res.data);
         
         if (res.data.status) {
           const data = res.data.data;
@@ -72,6 +71,7 @@ export class PatientDashboardComponent implements OnInit {
   logout(): void {
     localStorage.removeItem('patient');
     localStorage.removeItem('authToken');
+    localStorage.removeItem('authRole');
     sessionStorage.clear();
     this.toastr.success('Logged out successfully');
     

@@ -59,7 +59,6 @@ export class PatientRegisterComponent {
 
     this.api.registerPatient(dataToSend)
       .then((res: any) => {
-        console.log('Registration Response:', res.data);
         
         if (res.data.status) {
           this.toastr.success('Registration successful! Please login.');

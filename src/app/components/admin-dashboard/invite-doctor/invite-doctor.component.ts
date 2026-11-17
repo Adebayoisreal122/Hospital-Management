@@ -28,8 +28,6 @@ export class InviteDoctorComponent {
     this.api
       .inviteDoctor({ email: this.email })
       .then((res: any) => {
-        console.log('Full Axios Response:', res); // Debug log
-        console.log('Response Data:', res.data); // Debug log
         
         // Axios wraps the response in res.data
         const responseData = res.data;

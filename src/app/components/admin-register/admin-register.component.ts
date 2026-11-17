@@ -39,8 +39,6 @@ export class AdminRegisterComponent {
       // Axios wraps the response in 'data' property
       const apiResponse = response.data;
       
-      console.log('Full response:', response);
-      console.log('API response:', apiResponse);
       
       if (apiResponse.status) {
         this.message = apiResponse.message || 'Registration successful!';
@@ -50,7 +48,7 @@ export class AdminRegisterComponent {
         this.password = '';
 
                 setTimeout(() => {
-          this.router.navigate(['/admin-login']);
+          this.router.navigate(['/login']);
         }, 1500); 
         
       } else {

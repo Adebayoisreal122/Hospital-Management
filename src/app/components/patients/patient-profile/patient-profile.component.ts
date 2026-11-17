@@ -45,7 +45,6 @@ export class PatientProfileComponent implements OnInit {
 
     this.api.getPatientProfile()
       .then((res: any) => {
-        console.log('Profile Response:', res.data);
         
         if (res.data.status) {
           this.profileData = res.data.data;
@@ -84,7 +83,6 @@ export class PatientProfileComponent implements OnInit {
 
     this.api.updatePatientProfile(this.profileData)
       .then((res: any) => {
-        console.log('Update Response:', res.data);
         
         if (res.data.status) {
           this.toastr.success('Profile updated successfully!');
@@ -146,6 +144,7 @@ export class PatientProfileComponent implements OnInit {
   logout() {
     localStorage.removeItem('patient');
     localStorage.removeItem('authToken');
+    localStorage.removeItem('authRole');
     sessionStorage.clear();
     this.toastr.success('Logged out successfully');
     

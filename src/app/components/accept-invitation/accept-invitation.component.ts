@@ -16,7 +16,6 @@ export class AcceptInvitationComponent implements OnInit {
   token: string = '';
   email: string = '';
   
-  // Form fields
   name: string = '';
   specialization: string = '';
   phone: string = '';
@@ -36,7 +35,6 @@ export class AcceptInvitationComponent implements OnInit {
   ) {}
 
   ngOnInit() {
-    // Get token from URL
     this.token = this.route.snapshot.queryParamMap.get('token') || '';
     
     if (!this.token) {
@@ -45,14 +43,12 @@ export class AcceptInvitationComponent implements OnInit {
       return;
     }
 
-    // Validate token
     this.validateToken();
   }
 
   validateToken() {
     this.api.validateInvitationToken(this.token)
       .then((res: any) => {
-        console.log('Validation Response:', res.data);
         
         if (res.data.status) {
           this.tokenValid = true;
@@ -70,7 +66,6 @@ export class AcceptInvitationComponent implements OnInit {
   }
 
   completeRegistration() {
-    // Validation
     if (!this.name || !this.specialization || !this.phone || !this.password) {
       this.toastr.error('All fields are required');
       return;
@@ -96,7 +91,6 @@ export class AcceptInvitationComponent implements OnInit {
       password: this.password
     })
       .then((res: any) => {
-        console.log('Registration Response:', res.data);
         
         if (res.data.status) {
           this.toastr.success('Registration successful! Please login.');

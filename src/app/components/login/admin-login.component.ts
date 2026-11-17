@@ -50,13 +50,13 @@ export class AdminLoginComponent {
 
     loginPromise
       .then((res) => {
-        console.log('Login Response:', res.data); // Debug log to check response structure
         
         if (res.data.status) {
           // ✅ IMPORTANT: Store the authentication token
           if (res.data.token) {
             localStorage.setItem('authToken', res.data.token);
           }
+          localStorage.setItem('authRole', this.role);
 
           // Save login info in localStorage per role
           localStorage.setItem(this.role, JSON.stringify(res.data.data || res.data[this.role] || res.data));

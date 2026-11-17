@@ -41,7 +41,6 @@ export class PatientAppointmentsComponent implements OnInit {
 
     this.api.getPatientAppointments()
       .then((res: any) => {
-        console.log('Appointments Response:', res.data);
         
         if (res.data.status) {
           this.appointments = res.data.data || [];
@@ -87,7 +86,6 @@ export class PatientAppointmentsComponent implements OnInit {
 
     this.api.cancelAppointment(appointmentId)
       .then((res: any) => {
-        console.log('Cancel Response:', res.data);
         
         if (res.data.status) {
           this.toastr.success('Appointment cancelled successfully');

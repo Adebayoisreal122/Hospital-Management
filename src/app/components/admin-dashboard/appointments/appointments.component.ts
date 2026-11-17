@@ -16,7 +16,6 @@ export class AppointmentsComponent implements OnInit {
   filteredAppointments: any[] = [];
   loading: boolean = true;
 
-  // Filters
   searchTerm: string = '';
   selectedStatus: string = 'all';
   selectedDate: string = '';
@@ -50,7 +49,6 @@ export class AppointmentsComponent implements OnInit {
 
     this.api.getAllAppointments()
       .then((res: any) => {
-        console.log('Appointments Response:', res.data);
         
         if (res.data.status) {
           this.appointments = res.data.data || [];
@@ -141,7 +139,6 @@ export class AppointmentsComponent implements OnInit {
 
     this.api.adminUpdateAppointmentStatus(appointmentId, newStatus, notes)
       .then((res: any) => {
-        console.log('Update Response:', res.data);
         
         if (res.data.status) {
           this.toastr.success(`Appointment ${newStatus} successfully`);

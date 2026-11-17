@@ -39,7 +39,6 @@ export class BookAppointmentComponent implements OnInit {
   ngOnInit(): void {
 
    const token = localStorage.getItem('authToken');
-  console.log('Auth Token:', token); // Debug log
   
   if (!token) {
     this.toastr.error('Please login to continue');
@@ -103,7 +102,6 @@ export class BookAppointmentComponent implements OnInit {
 
     this.api.bookAppointment(appointmentData)
       .then((res: any) => {
-        console.log('Booking Response:', res.data);
         
         if (res.data.status) {
           this.toastr.success('Appointment booked successfully!');

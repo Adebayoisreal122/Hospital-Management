@@ -1,4 +1,5 @@
 import { Routes } from '@angular/router';
+import { roleGuard } from './guards/role.guard';
 import { HomeComponent } from './components/home/home.component';
 import { AdminRegisterComponent } from './components/admin-register/admin-register.component';
 import { AdminLoginComponent } from './components/login/admin-login.component';
@@ -37,6 +38,7 @@ export const routes: Routes = [
   {
     path: 'admin-dashboard',
     component: DashboardComponent,
+    canActivate: [roleGuard('admin')],
     children: [
       { path: 'doctors', component: DoctorsComponent },
       { path: 'patients', component: PatientsComponent },
@@ -47,14 +49,13 @@ export const routes: Routes = [
     ],
   },
 
-  // ✅ DOCTOR DASHBOARD (standalone)
-  { path: 'doctor-dashboard', component: DoctorDashboardComponent },
    { path: 'accept-invitation', component: AcceptInvitationComponent },
 
   // ✅ DOCTOR DASHBOARD (with child pages)
   {
     path: 'doctor-dashboard',
     component: DoctorDashboardComponent,
+    canActivate: [roleGuard('doctor')],
     children: [
       { path: 'appointments', component: DoctorAppointmentsComponent },
       { path: 'patients', component: DoctorPatientsComponent },
@@ -68,6 +69,7 @@ export const routes: Routes = [
     {
     path: 'patient-dashboard',
     component: PatientDashboardComponent,
+    canActivate: [roleGuard('patient')],
     children: [
       { path: 'book-appointment', component: BookAppointmentComponent }, // We'll create this
       { path: 'appointments', component: PatientAppointmentsComponent }, // We'll create this

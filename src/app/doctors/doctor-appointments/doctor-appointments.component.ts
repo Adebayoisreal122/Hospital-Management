@@ -45,7 +45,6 @@ export class DoctorAppointmentsComponent implements OnInit {
 
     this.api.getDoctorAppointments()
       .then((res: any) => {
-        console.log('Appointments Response:', res.data);
         
         if (res.data.status) {
           this.appointments = res.data.data || [];
@@ -107,7 +106,6 @@ export class DoctorAppointmentsComponent implements OnInit {
 
     this.api.updateAppointmentStatus(appointmentId, newStatus, notes)
       .then((res: any) => {
-        console.log('Update Response:', res.data);
         
         if (res.data.status) {
           this.toastr.success(`Appointment ${newStatus} successfully`);

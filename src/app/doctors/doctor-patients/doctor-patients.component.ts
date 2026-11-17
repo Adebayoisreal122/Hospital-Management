@@ -37,7 +37,6 @@ export class DoctorPatientsComponent implements OnInit {
 
     this.api.getDoctorPatients()
       .then((res: any) => {
-        console.log('Patients Response:', res.data);
         
         if (res.data.status) {
           this.patients = res.data.data || [];
